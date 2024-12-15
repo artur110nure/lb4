@@ -31,4 +31,27 @@ class Student {
   String toString() {
     return 'Person(firstName: \$firstName, lastName: \$lastName, department: \$department, grade: \$grade, gender: \$gender)';
   }
+
+   factory Student.fromJson(Map<String, dynamic> json) {
+    final gender = Gender.values.firstWhere((g) => g.toString() == json['gender']);
+    return Student(
+      id: json['id'],
+      firstName: json['firstName'],
+      lastName: json['lastName'],
+      department: Department.fromJson(json['department']),
+      grade: json["grade"],
+      gender: gender
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'firstName': firstName,
+      'lastName': lastName,
+      'department': department.toJson(),
+      'grade': grade,
+      'gender': gender.toString(),
+    };
+  }
 }

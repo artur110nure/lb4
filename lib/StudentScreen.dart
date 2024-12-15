@@ -11,7 +11,7 @@ class StudentsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final students = ref.watch(studentsProvider);
-    final StudentsNotifier = ref.watch(studentsProvider.notifier);
+    final studentsNotifier = ref.watch(studentsProvider.notifier);
 
     void _showAddStudentModal() async {
       final newStudent = await showModalBottomSheet<Student>(
@@ -23,7 +23,13 @@ class StudentsScreen extends ConsumerWidget {
       );
 
       if (newStudent != null) {
-        ref.read(studentsProvider.notifier).addStudent(Student(firstName: newStudent.firstName, lastName: newStudent.lastName, department: newStudent.department, grade: newStudent.grade, gender: newStudent.gender));
+        ref.read(studentsProvider.notifier).addStudent(Student(
+              firstName: newStudent.firstName,
+              lastName: newStudent.lastName,
+              department: newStudent.department,
+              grade: newStudent.grade,
+              gender: newStudent.gender,
+            ));
       }
     }
 
@@ -35,63 +41,75 @@ class StudentsScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Students'),
       ),
-      body: ListView.builder(
-        itemCount: students.length,
-        itemBuilder: (context, index) {
-          final student = students[index];
-          return Dismissible(
-            key: Key(student.firstName + student.lastName),
-            direction: DismissDirection.endToStart,
-            onDismissed: (direction) {
-              _removeStudent(student);
-
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('${student.firstName} ${student.lastName} removed'),
-                  duration: const Duration(seconds: 2),
-                  action: SnackBarAction(
-                    label: 'Undo',
-                    onPressed: () {
-                        StudentsNotifier.addStudent(Student(firstName: student.firstName, lastName: student.lastName, department: student.department, grade: student.grade, gender: student.gender));
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              itemCount: students.length,
+              itemBuilder: (context, index) {
+                final student = students[index];
+                return Dismissible(
+                  key: Key(student.firstName + student.lastName),
+                  direction: DismissDirection.endToStart,
+                  onDismissed: (direction) {
+                      final studentToDelete = students[index];
+                      final notifier = ref.read(studentsProvider.notifier);
+                      notifier.removeStudentLocal(studentToDelete);
+                      ScaffoldMessenger.of(context).clearSnackBars();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          duration: const Duration(seconds: 3),
+                          content: const Text('Student deleted'),
+                          action: SnackBarAction(
+                              label: 'Undo',
+                              onPressed: () {
+                                notifier.insertStudentLocal(studentToDelete, index);
+                              }),
+                        ),
+                      ).closed.then((value) {
+                        if (value != SnackBarClosedReason.action) {
+                          notifier.removeStudent(studentToDelete);
+                        }
+                      });
                     },
+
+                  background: Container(
+                    color: Colors.red,
+                    alignment: Alignment.centerRight,
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: const Icon(Icons.delete, color: Colors.white),
                   ),
-                ),
-              );
-            },
-            background: Container(
-              color: Colors.red,
-              alignment: Alignment.centerRight,
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: const Icon(Icons.delete, color: Colors.white),
-            ),
-            child: Card(
-              margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-              elevation: 4,
-              color: _getBackgroundColor(student.gender),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: ListTile(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                title: Text(
-                  '${student.firstName} ${student.lastName}',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(student.department.icon, size: 20),
-                    const SizedBox(width: 8),
-                    Text(
-                      '${student.grade}',
-                      style: const TextStyle(fontSize: 16),
+                  child: Card(
+                    margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                    elevation: 4,
+                    color: _getBackgroundColor(student.gender),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                  ],
-                ),
-              ),
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      title: Text(
+                        '${student.firstName} ${student.lastName}',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(student.department.icon, size: 20),
+                          const SizedBox(width: 8),
+                          Text(
+                            '${student.grade}',
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
-          );
-        },
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddStudentModal,

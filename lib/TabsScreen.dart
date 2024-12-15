@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:kiuki21_9_fenchenko/widgets/loader.dart';
 
 import 'DepartmentScreen.dart';
 import 'StudentScreen.dart';
@@ -30,26 +31,31 @@ class _TabsScreenState extends State<TabsScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_pages[_selectedTabIndex]['title'] as String),
-      ),
-      body: _pages[_selectedTabIndex]['page'] as Widget,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedTabIndex,
-        onTap: _selectTab,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.business),
-            label: 'Departments',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            label: 'Students',
-          ),
-        ],
-      ),
-    );
-  }
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: Text(_pages[_selectedTabIndex]['title'] as String),
+    ),
+    body: Stack(
+      children: [
+        _pages[_selectedTabIndex]['page'] as Widget,
+        GlobalLoadingIndicator()
+      ],
+    ),
+    bottomNavigationBar: BottomNavigationBar(
+      currentIndex: _selectedTabIndex,
+      onTap: _selectTab,
+      items: [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.business),
+          label: 'Departments',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.school),
+          label: 'Students',
+        ),
+      ],
+    ),
+  );
+}
 }

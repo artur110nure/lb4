@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kiuki21_9_fenchenko/models/department.dart';
+import 'package:kiuki21_9_fenchenko/models/student.dart';
 import 'package:kiuki21_9_fenchenko/providers/studentsProvider.dart';
 import '../main.dart';
 

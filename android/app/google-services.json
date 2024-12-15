@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "165908523998",
+    "firebase_url": "https://lb4students-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "lb4students",
+    "storage_bucket": "lb4students.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:165908523998:android:2ca94e9526a47c8156cb4f",
+        "android_client_info": {
+          "package_name": "com.artur.lb4"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJFs_lf9MJGkqG2ceU-qLLPaOg00M0L3g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:165908523998:android:1ecbf5ec6c3b692656cb4f",
+        "android_client_info": {
+          "package_name": "com.example.kiuki21_9_fenchenko"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJFs_lf9MJGkqG2ceU-qLLPaOg00M0L3g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
